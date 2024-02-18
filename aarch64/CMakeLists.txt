@@ -20,3 +20,5 @@ function(add_bin source_file)
 endfunction()
 
 add_bin(MMult0.cpp)
+add_bin(MMult1.cpp)
+add_bin(MMult_4x4_8.cpp)

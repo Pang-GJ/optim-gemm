@@ -1,6 +1,6 @@
 /* Routine for computing C = A * B */
 
-void AddDot(int, float*, float*, int, float*);
+void AddDot4x4(int, float*, float*, int, float*);
 
 void MY_MMult(int m, int n, int k, float* a, int lda, float* b, int ldb,
               float* c, int ldc) {
@@ -12,7 +12,7 @@ void MY_MMult(int m, int n, int k, float* a, int lda, float* b, int ldb,
 
   for (int j = 0; j < n; j++) {
     for (int i = 0; i < m; i++) {
-      AddDot(k, &A(i, 0), &B(0, j), ldb, &C(i, j));
+      AddDot4x4(k, &A(i, 0), &B(0, j), ldb, &C(i, j));
     }
   }
 
@@ -21,7 +21,7 @@ void MY_MMult(int m, int n, int k, float* a, int lda, float* b, int ldb,
 #undef C
 }
 
-void AddDot(int k, float* x, float* y, int ldb, float* gamma) {
+void AddDot4x4(int k, float* x, float* y, int ldb, float* gamma) {
   for (int p = 0; p < k; p++) {
     *gamma += x[p] * y[p * ldb];
   }
