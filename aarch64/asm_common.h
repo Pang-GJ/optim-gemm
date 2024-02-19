@@ -7,6 +7,8 @@
 // #include "src/common/utils.h"
 // #include "src/fallback/conv_bias/common.h"
 
+#define MEGDNN_AARCH64 1
+
 #if MGB_ENABLE_DOT
 #if defined(__ARM_FEATURE_DOTPROD)
 #undef __ARM_FEATURE_DOTPROD
