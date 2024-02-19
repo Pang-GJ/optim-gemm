@@ -21,6 +21,8 @@ void AddDot4x4(int, float*, int, float*, int, float*, int);
 
 void InnerKernel(int, int, int, float*, int, float*, int, float*, int);
 
+void PackMatrixB(int, float*, int, float*);
+
 void MY_MMult(int m, int n, int k, float* a, int lda, float* b, int ldb,
               float* c, int ldc) {
   int i, p, pb, ib;
@@ -33,12 +35,25 @@ void MY_MMult(int m, int n, int k, float* a, int lda, float* b, int ldb,
   }
 }
 
+void PackMatrixB(int k, float* b, int ldb, float* packed_b) {
+  int j;
+  for (j = 0; j < k; ++j) {
+    float* b_ij_pntr = &B(j, 0);
+    *packed_b++ = b_ij_pntr[0];
+    *packed_b++ = b_ij_pntr[1];
+    *packed_b++ = b_ij_pntr[2];
+    *packed_b++ = b_ij_pntr[3];
+  }
+}
+
 void InnerKernel(int m, int n, int k, float* a, int lda, float* b, int ldb,
                  float* c, int ldc) {
   int i, j;
+  float packed_b[k * n];
 
   // unrolling the loop 4 times
   for (int j = 0; j < n; j += 4) {
+    PackMatrixB(k, &B(0, j), ldb, &packed_b[j * k]);
     for (int i = 0; i < m; i += 4) {
       AddDot4x4(k, &A(i, 0), lda, &B(0, j), ldb, &C(i, j), ldc);
     }
@@ -104,7 +119,8 @@ void AddDot4x4(int k, float* a, int lda, float* b, int ldb, float* c, int ldc) {
    */
 
   for (p = 0; p < k; p++) {
-    float32x4_t b_reg = vld1q_f32(&B(p, 0));
+    float32x4_t b_reg = vld1q_f32(b);
+    b += 4;
 
     a_0p_reg = *a_0p_pntr++;
     a_1p_reg = *a_1p_pntr++;
