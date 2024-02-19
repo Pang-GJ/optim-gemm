@@ -21,7 +21,7 @@ UTIL       := copy_matrix.o \
               dclock.o \
               REF_MMult.o \
               print_matrix.o \
-							megengine.0
+							megengine.o
 
 TEST_OBJS  := test_MMult.o $(NEW).o 
 
