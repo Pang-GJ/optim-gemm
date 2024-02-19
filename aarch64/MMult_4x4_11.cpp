@@ -55,7 +55,7 @@ void InnerKernel(int m, int n, int k, float* a, int lda, float* b, int ldb,
   for (int j = 0; j < n; j += 4) {
     PackMatrixB(k, &B(0, j), ldb, &packed_b[j * k]);
     for (int i = 0; i < m; i += 4) {
-      AddDot4x4(k, &A(i, 0), lda, &B(0, j), ldb, &C(i, j), ldc);
+      AddDot4x4(k, &A(i, 0), lda, packed_b + j * k, ldb, &C(i, j), ldc);
     }
   }
 }
